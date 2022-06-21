@@ -1,25 +1,59 @@
 import os
-import shutil #library for copy file command
+import shutil  # library for copy file command
+import tkinter
+from tkinter import Frame, messagebox
+from tkinter.constants import X,LEFT,TRUE,RIGHT
 
-path = "C:\\Users\\Oat\\Documents\\Project\\RenameFile\\Example\\"
-outputpath = "C:\\Users\\Oat\\Documents\\Project\\RenameFile\\Output\\"
+def CopName(inputPath, outputPath):
+    inputPath=inputPath+"\\"
+    outputPath=outputPath+"\\"
+    for i in os.listdir(inputPath):
+        print(i)
+        shutil.copyfile(inputPath+i, outputPath+i)              #copy file from example to output
+        os.rename(outputPath+i, outputPath+i+'.txt')            #rename file by adding .txt
 
-try :
-    shutil.rmtree(outputpath)                               #remove non-empty directory
-except OSError as e:
-    print("Error cannot remove directory : %s : %s" % (outputpath, e.strerror))
-# try :    
-#     os.mkdir(outputpath)    
-# except OSError as e:                                #create directory to be output file directory
-#     print("Error cannot create directory : %s : %s" % (outputpath, e.strerror))
+def Rename():
+    inputPath = et1.get()
+    outputPath = et2.get()
+    if (inputPath==outputPath):
+        messagebox.showerror("Rename Process", "Input&Output is the same path")
+    else:
+        try : 
+            CopName(inputPath, outputPath)
+            messagebox.showinfo("Rename Process", "Successful" )
+            os.startfile(outputPath)
+        except OSError as e:
+            messagebox.showerror("Rename Process", e.strerror )
+    
+# GUI section
+GUI_Renamefile = tkinter.Tk()                           
+GUI_Renamefile.title("Boyzilla")   
+GUI_Renamefile.geometry("400x100+300+300")                  #dimension "widthxheight+x+y" x&y is grid when open gui
 
+#Frame1
+frame1=Frame(GUI_Renamefile)    
+frame1.pack(fill=X)     
 
-# shutil.rmtree(outputpath)   
-os.mkdir(outputpath)                                #remove non-empty directory
+lbl1 = tkinter.Label(frame1,text="Input Path",width=10)     #Path of your input file
+lbl1.pack(side=LEFT,padx=5,pady=5)
 
-print(f"Before Renaming: {os.listdir(path)}")
-for i in os.listdir(path):
-    print(i)
-    shutil.copyfile(path+i, outputpath+i)               #copy file from example to output
-    os.rename(outputpath+i, outputpath+i+'.txt')        #rename file by adding .txt
-#print(f"After Renaming: {os.listdir(path)}")
+et1 = tkinter.Entry(frame1)
+et1.pack(fill=X,expand=TRUE)
+
+#Frame2 
+frame2=Frame(GUI_Renamefile)    
+frame2.pack(fill=X)     
+
+lbl2 = tkinter.Label(frame2,text="Output Path",width=10)    #Where to store output file
+lbl2.pack(side=LEFT,padx=5,pady=5)
+
+et2 = tkinter.Entry(frame2)
+et2.pack(fill=X,expand=TRUE)
+
+#Frame3
+frame3=Frame(GUI_Renamefile)    
+frame3.pack(fill=X)     
+
+B_Rename = tkinter.Button(frame3,text="Rename", command=Rename)
+B_Rename.pack(side=RIGHT, padx=5,pady=5)
+GUI_Renamefile.mainloop()
