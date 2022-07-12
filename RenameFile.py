@@ -4,7 +4,7 @@ import tkinter
 from tkinter import Frame, messagebox
 from tkinter.constants import X,LEFT,TRUE,RIGHT
 
-def CopName(inputPath, outputPath):
+def CopyNRename(inputPath, outputPath):
     inputPath=inputPath+"\\"
     outputPath=outputPath+"\\"
     for i in os.listdir(inputPath):
@@ -12,14 +12,25 @@ def CopName(inputPath, outputPath):
         shutil.copyfile(inputPath+i, outputPath+i)              #copy file from example to output
         os.rename(outputPath+i, outputPath+i+'.txt')            #rename file by adding .txt
 
-def Rename():
+def Rename(inputPath, outputPath):
+    inputPath=inputPath+"\\"
+    outputPath=outputPath+"\\"
+    for i in os.listdir(inputPath):
+        os.rename(outputPath+i, outputPath+i+'.txt')            #rename file by adding .txt
+
+def FuncButtonRename():
     inputPath = et1.get()
     outputPath = et2.get()
     if (inputPath==outputPath):
-        messagebox.showerror("Rename Process", "Input&Output is the same path")
+        try : 
+            Rename(inputPath, outputPath)
+            messagebox.showinfo("Rename Process", "Successful" )
+            os.startfile(outputPath)
+        except OSError as e:
+            messagebox.showerror("Rename Process", e.strerror )
     else:
         try : 
-            CopName(inputPath, outputPath)
+            CopyNRename(inputPath, outputPath)
             messagebox.showinfo("Rename Process", "Successful" )
             os.startfile(outputPath)
         except OSError as e:
@@ -54,6 +65,6 @@ et2.pack(fill=X,expand=TRUE)
 frame3=Frame(GUI_Renamefile)    
 frame3.pack(fill=X)     
 
-B_Rename = tkinter.Button(frame3,text="Rename", command=Rename)
+B_Rename = tkinter.Button(frame3,text="Rename", command=FuncButtonRename)
 B_Rename.pack(side=RIGHT, padx=5,pady=5)
 GUI_Renamefile.mainloop()
